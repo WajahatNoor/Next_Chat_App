@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573417083727",
+    "project_id": "nextchat-c9b59",
+    "storage_bucket": "nextchat-c9b59.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573417083727:android:57f146e77355065e0eab3a",
+        "android_client_info": {
+          "package_name": "com.example.next_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi4u4vkPHoFDH00K-j88b8QEi_xl7U5LU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
