@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:next_chat/app/services/fcm_device_token_service.dart';
+import 'package:next_chat/app/services/fcm_service.dart';
 import 'package:next_chat/app/services/firebase_auth_service.dart';
 
 part 'auth_event.dart';
@@ -60,6 +62,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(LogoutUserLoadingState());
     try {
       await Future.delayed(Duration(seconds: 4));
+      await FcmTokenService.instance.removeCurrentToken();
       await firebaseAuthService.logoutUser();
     } catch (e) {
       emit(LogoutUserErrorState(errorMessage: e.toString()));
@@ -72,6 +75,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     await Future.delayed(Duration(seconds: 5));
     if (event.user != null) {
+      final token = await FcmService.instance.getDeviceToken();
+
+      if (token != null) {
+        await FcmTokenService.instance.registerToken(token);
+      }
       emit(AuthenticatedState());
     } else {
       emit(UnauthenticatedState());
