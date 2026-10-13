@@ -30,11 +30,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: AppDrawer(),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         surfaceTintColor: Colors.transparent,
       ),
 
@@ -70,8 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
           builder: (context, state) {
             if (state is GetHomeDataLoadingState) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.primary),
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               );
             }
 
@@ -87,8 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         "Hi, ${user?.name ?? "there"} 👋",
-                        style: const TextStyle(
-                          color: AppColors.textColor,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w800,
                           fontSize: 22,
                         ),
@@ -96,13 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       const SizedBox(height: 4),
 
-                      const Text(
+                      Text(
                         "Start a conversation with your friends",
-                        style: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
+
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
 
                       const SizedBox(height: 20),
@@ -119,18 +119,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: InputDecoration(
                           hintText: "Search people...",
 
-                          hintStyle: const TextStyle(
-                            color: AppColors.secondaryText,
+                          hintStyle: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
 
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                             Icons.search,
-                            color: AppColors.secondaryText,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
 
                           filled: true,
 
-                          fillColor: AppColors.surface,
+                          fillColor: Theme.of(context).colorScheme.surface,
 
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -158,10 +162,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       const SizedBox(height: 24),
 
-                      const Text(
+                      Text(
                         "People",
                         style: TextStyle(
-                          color: AppColors.textColor,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
                         ),
@@ -174,7 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text(
                                 "No user found!",
                                 style: TextStyle(
-                                  color: AppColors.textColor,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 16,
                                 ),

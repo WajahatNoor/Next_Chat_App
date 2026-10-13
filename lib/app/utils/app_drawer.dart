@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:next_chat/app/modules/home/bloc/home_bloc.dart';
+import 'package:next_chat/app/modules/theme/bloc/themebloc_bloc.dart';
 import 'package:next_chat/app/res/app_colors.dart';
 import 'package:next_chat/app/routes/app_routes.dart';
 import 'package:next_chat/app/utils/app_dialougs.dart';
@@ -90,11 +91,20 @@ class AppDrawer extends StatelessWidget {
                 },
               ),
 
-              ListTile(
-                leading: const Icon(Icons.settings_outlined),
-                title: const Text('Settings'),
-                onTap: () {
-                  Navigator.pop(context);
+              BlocBuilder<ThemeblocBloc, ThemeblocState>(
+                builder: (context, state) {
+                  final value =
+                      state is ThemeChangesSuccessState && state.isDarkMode;
+                  return SwitchListTile(
+                    secondary: const Icon(Icons.dark_mode_outlined),
+                    title: Text('Dark Mode'),
+                    value: value,
+                    onChanged: (value) {
+                      context.read<ThemeblocBloc>().add(
+                        ThemeChangeEvent(isDarkMode: value),
+                      );
+                    },
+                  );
                 },
               ),
 

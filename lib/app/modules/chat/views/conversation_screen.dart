@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:next_chat/app/data/models/user_profile_model.dart';
 import 'package:next_chat/app/modules/chat/bloc/chat_bloc.dart';
 import 'package:next_chat/app/modules/chat/widgets/message_bubble.dart';
@@ -27,6 +28,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     final myId = FirebaseAuth.instance.currentUser?.uid;
     final otherUserId = widget.user.uid;
 
@@ -38,7 +41,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
     context.read<ChatBloc>().add(
       LoadedMessagesEvent(conversationId: conversationId),
     );
-    super.initState();
   }
 
   @override
@@ -49,31 +51,38 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
+    final colorScheme = Theme.of(context).colorScheme;
 
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: colorScheme.onSurface,
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
         elevation: 0,
-
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 20,
-              backgroundColor: AppColors.primary,
-              child: Icon(Icons.person, color: AppColors.surface),
+              backgroundColor: colorScheme.primary,
+              child: Icon(Icons.person, color: colorScheme.onPrimary),
             ),
-
             const SizedBox(width: 12),
-
-            Text(
-              widget.user.name ?? "",
-              style: const TextStyle(
-                color: AppColors.textColor,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
+            Expanded(
+              child: Text(
+                widget.user.name ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
@@ -84,20 +93,35 @@ class _ConversationScreenState extends State<ConversationScreen> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is ChatLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(color: colorScheme.primary),
+            );
           }
 
           if (state is ChatLoadingError) {
-            return Center(child: Text(state.errorMessage));
+            return Center(
+              child: Text(
+                state.errorMessage,
+                style: TextStyle(color: colorScheme.error),
+              ),
+            );
           }
 
           if (state is ChatLoaded) {
             final isSending = state.isSending;
+
             return Column(
               children: [
                 Expanded(
                   child: state.messages.isEmpty
-                      ? const Center(child: Text("No messages yet"))
+                      ? Center(
+                          child: Text(
+                            "No messages yet",
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        )
                       : ListView.builder(
                           reverse: true,
                           itemCount: state.messages.length,
@@ -138,13 +162,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         Expanded(
                           child: TextField(
                             controller: messageController,
+                            style: TextStyle(color: colorScheme.onSurface),
                             decoration: InputDecoration(
                               hintText: "Type a message...",
+                              hintStyle: TextStyle(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                               filled: true,
-                              fillColor: AppColors.surface,
+                              fillColor: colorScheme.surface,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(24),
                                 borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                borderSide: BorderSide(
+                                  color: colorScheme.primary,
+                                ),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 18,
@@ -158,39 +196,41 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
                         CircleAvatar(
                           radius: 24,
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: colorScheme.primary,
                           child: isSending
-                              ? Center(
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
                                   child: CircularProgressIndicator(
-                                    color: AppColors.background,
+                                    color: Colors.white,
+                                    strokeWidth: 2,
                                   ),
                                 )
                               : IconButton(
-                                  onPressed: isSending
-                                      ? null
-                                      : () {
-                                          final messageText = messageController
-                                              .text
-                                              .trim();
-                                          if (messageText.isEmpty) {
-                                            return;
-                                          }
-                                          final senderId = FirebaseAuth
-                                              .instance
-                                              .currentUser
-                                              ?.uid;
-                                          context.read<ChatBloc>().add(
-                                            SendMessageEvent(
-                                              messageText: messageText,
-                                              senderId: senderId ?? "",
-                                              receiverId: widget.user.uid,
-                                            ),
-                                          );
-                                          messageController.clear();
-                                        },
-                                  icon: const Icon(
+                                  onPressed: () {
+                                    final messageText = messageController.text
+                                        .trim();
+
+                                    if (messageText.isEmpty) {
+                                      return;
+                                    }
+
+                                    final senderId =
+                                        FirebaseAuth.instance.currentUser?.uid;
+
+                                    context.read<ChatBloc>().add(
+                                      SendMessageEvent(
+                                        messageText: messageText,
+                                        senderId: senderId ?? "",
+                                        receiverId: widget.user.uid,
+                                      ),
+                                    );
+
+                                    messageController.clear();
+                                  },
+                                  icon: Icon(
                                     Icons.send,
-                                    color: AppColors.surface,
+                                    color: colorScheme.onPrimary,
                                     size: 20,
                                   ),
                                 ),
@@ -201,9 +241,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
               ],
             );
-          } else {
-            return SizedBox.shrink();
           }
+
+          return const SizedBox.shrink();
         },
       ),
     );

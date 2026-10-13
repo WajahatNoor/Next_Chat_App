@@ -30,7 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Edit Profile',
@@ -42,8 +42,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: AppColors.background,
-        surfaceTintColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        surfaceTintColor: Theme.of(context).colorScheme.onSurface,
         iconTheme: const IconThemeData(color: AppColors.textColor),
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
@@ -124,9 +124,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: IconButton(
                               onPressed: () => showImagePickerOptions(context),
                               tooltip: 'Change profile photo',
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.camera_alt_outlined,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.surface,
                                 size: 21,
                               ),
                             ),
@@ -138,11 +138,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   const SizedBox(height: 12),
 
-                  const Center(
+                  Center(
                     child: Text(
                       'Change profile photo',
                       style: TextStyle(
-                        color: AppColors.secondaryText,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 13,
                       ),
                     ),

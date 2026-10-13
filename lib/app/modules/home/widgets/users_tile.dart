@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:next_chat/app/data/models/user_profile_model.dart';
-import 'package:next_chat/app/res/app_colors.dart';
 import 'package:next_chat/app/utils/date_time_formatter.dart';
 
 class UsersList extends StatelessWidget {
@@ -11,6 +10,8 @@ class UsersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -25,7 +26,7 @@ class UsersList extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 27,
-                    backgroundColor: Colors.grey.shade300,
+                    backgroundColor: colorScheme.surfaceContainerHighest,
                     backgroundImage:
                         user.photoUrl != null && user.photoUrl!.isNotEmpty
                         ? NetworkImage(user.photoUrl!)
@@ -38,7 +39,7 @@ class UsersList extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textColor,
+                              color: colorScheme.onSurface,
                             ),
                           )
                         : null,
@@ -54,7 +55,10 @@ class UsersList extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.green,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2.5),
+                          border: Border.all(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            width: 2.5,
+                          ),
                         ),
                       ),
                     ),
@@ -71,6 +75,10 @@ class UsersList extends StatelessWidget {
                       user.name.isNotEmpty ? user.name : 'Unknown User',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
 
                     const SizedBox(height: 4),
@@ -81,6 +89,10 @@ class UsersList extends StatelessWidget {
                           : DateTimeFormatter.formatLastSeen(user.lastSeen),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
