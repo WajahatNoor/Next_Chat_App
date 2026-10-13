@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:next_chat/app/data/models/user_profile_model.dart';
@@ -7,6 +6,7 @@ import 'package:next_chat/app/modules/auth/views/login_screen.dart';
 import 'package:next_chat/app/modules/auth/views/signup_screen.dart';
 import 'package:next_chat/app/modules/chat/views/conversation_screen.dart';
 import 'package:next_chat/app/modules/home/views/home_screen.dart';
+import 'package:next_chat/app/modules/profile/views/edit_profile_screen.dart';
 import 'package:next_chat/app/modules/splash/views/splash_screen.dart';
 import 'package:next_chat/app/routes/app_routes.dart';
 import 'package:next_chat/app/routes/auth_router_refresh.dart';
@@ -56,6 +56,10 @@ class AppPages {
         GoRoute(
           path: AppRoutes.home,
           builder: (context, state) => HomeScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.editProfile,
+          builder: (context, state) => EditProfileScreen(),
         ),
 
         GoRoute(

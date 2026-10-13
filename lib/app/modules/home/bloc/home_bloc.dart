@@ -9,9 +9,11 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final FirebaseUserProfileService firebaseUserProfileService;
+
   HomeBloc({required this.firebaseUserProfileService}) : super(HomeInitial()) {
     on<GetHomeDataEvent>(getHomeDataEvent);
     on<SearchUserEvent>(searchUserEvent);
+    on<WatchCurrentUserProfileEvent>(watchCurrentUserProfileEvent);
   }
 
   FutureOr<void> getHomeDataEvent(
@@ -22,6 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final user = await firebaseUserProfileService.getUserProfile();
       final users = await firebaseUserProfileService.getAllUsers();
+
       emit(
         GetHomeDataSuccessState(
           user: user,
@@ -30,6 +33,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           isnoUserfoundtofiltered: false,
         ),
       );
+
+      add(WatchCurrentUserProfileEvent());
     } catch (e) {
       emit(GetHomeDataErrorState(errorMessage: e.toString()));
     }
@@ -83,5 +88,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       }
     } catch (e) {}
+  }
+
+  Future<void> watchCurrentUserProfileEvent(
+    WatchCurrentUserProfileEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    await emit.forEach<UserProfileModel?>(
+      firebaseUserProfileService.watchUserProfile(),
+      onData: (profile) {
+        final currentState = state;
+
+        if (currentState is GetHomeDataSuccessState) {
+          return GetHomeDataSuccessState(
+            user: profile,
+            users: currentState.users,
+            filteredusers: currentState.filteredusers,
+            isnoUserfoundtofiltered: currentState.isnoUserfoundtofiltered,
+          );
+        }
+
+        return currentState;
+      },
+      onError: (error, stackTrace) {
+        return GetHomeDataErrorState(errorMessage: error.toString());
+      },
+    );
   }
 }

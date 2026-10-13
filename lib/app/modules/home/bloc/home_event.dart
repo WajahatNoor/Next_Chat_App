@@ -10,3 +10,5 @@ class SearchUserEvent extends HomeEvent {
 
   SearchUserEvent({required this.query});
 }
+
+class WatchCurrentUserProfileEvent extends HomeEvent {}
