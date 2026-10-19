@@ -141,5 +141,5 @@ Through this project, I practiced:
 **Wajahat Noor**  
 Flutter Developer | Mobile App Developer
 
-- GitHub: [WajahatNoor12](https://github.com/WajahatNoor12)
-- Project Repository: [Next Chat](https://github.com/WajahatNoor12/next_chat)
+- GitHub: [WajahatNoor](https://github.com/WajahatNoor)
+- Project Repository: [Next Chat](https://github.com/WajahatNoor/Next_Chat_App)
