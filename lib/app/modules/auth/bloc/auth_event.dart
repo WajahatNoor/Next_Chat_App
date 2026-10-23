@@ -29,3 +29,9 @@ class LoginAccountEvent extends AuthEvent {
 }
 
 class LogoutAccountEvent extends AuthEvent {}
+
+class SendResetPasswordEmailEvent extends AuthEvent {
+  final String email;
+
+  SendResetPasswordEmailEvent({required this.email});
+}

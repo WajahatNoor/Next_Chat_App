@@ -32,3 +32,17 @@ class LogoutUserErrorState extends AuthActionState {
   final String errorMessage;
   LogoutUserErrorState({required this.errorMessage});
 }
+
+class ResetPasswordEmailSendLoadingState extends AuthState {}
+
+class ResetPasswordEmailSendSuccessState extends AuthActionState {
+  final String successMessage;
+
+  ResetPasswordEmailSendSuccessState({required this.successMessage});
+}
+
+class ResetPasswordEmailSendErrorState extends AuthActionState {
+  final String message;
+
+  ResetPasswordEmailSendErrorState({required this.message});
+}

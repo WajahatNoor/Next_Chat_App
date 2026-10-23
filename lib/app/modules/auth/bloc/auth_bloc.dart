@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CreateAccountEvent>(createAccountEvent);
     on<LoginAccountEvent>(loginAccountEvent);
     on<LogoutAccountEvent>(logoutAccountEvent);
+    on<SendResetPasswordEmailEvent>(sendResetPasswordEmailEvent);
 
     authSubscription = firebaseAuthService.authStateChanges.listen((user) {
       add(AuthStateChangeEvent(user: user));
@@ -90,5 +91,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> close() {
     authSubscription?.cancel();
     return super.close();
+  }
+
+  FutureOr<void> sendResetPasswordEmailEvent(
+    SendResetPasswordEmailEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(ResetPasswordEmailSendLoadingState());
+      await Future.delayed(Duration(seconds: 4));
+      await firebaseAuthService.resetPassword(email: event.email);
+      emit(
+        ResetPasswordEmailSendSuccessState(
+          successMessage:
+              "Reset email sent successfully. Please check your inbox.",
+        ),
+      );
+    } catch (e) {
+      emit(ResetPasswordEmailSendErrorState(message: e.toString()));
+    }
   }
 }

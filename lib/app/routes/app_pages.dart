@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:next_chat/app/data/models/user_profile_model.dart';
 import 'package:next_chat/app/modules/auth/bloc/auth_bloc.dart';
+import 'package:next_chat/app/modules/auth/views/forgot_password_screen.dart';
 import 'package:next_chat/app/modules/auth/views/login_screen.dart';
 import 'package:next_chat/app/modules/auth/views/signup_screen.dart';
 import 'package:next_chat/app/modules/chat/views/conversation_screen.dart';
@@ -25,7 +26,9 @@ class AppPages {
 
         final isSplash = location == AppRoutes.splash;
         final isAuthPage =
-            location == AppRoutes.login || location == AppRoutes.register;
+            location == AppRoutes.login ||
+            location == AppRoutes.register ||
+            location == AppRoutes.forgotPassowrd;
 
         if (authState is AuthInitial) {
           return AppRoutes.splash;
@@ -60,6 +63,10 @@ class AppPages {
         GoRoute(
           path: AppRoutes.editProfile,
           builder: (context, state) => EditProfileScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.forgotPassowrd,
+          builder: (context, state) => ForgotPasswordScreen(),
         ),
 
         GoRoute(

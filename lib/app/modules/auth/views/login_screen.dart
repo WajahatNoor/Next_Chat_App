@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:next_chat/app/modules/auth/bloc/auth_bloc.dart';
 import 'package:next_chat/app/modules/auth/widgets/textfield.dart';
 import 'package:next_chat/app/res/app_colors.dart';
+import 'package:next_chat/app/routes/app_pages.dart';
 import 'package:next_chat/app/routes/app_routes.dart';
 import 'package:next_chat/app/utils/app_loader.dart';
 import 'package:next_chat/app/utils/app_validators.dart' show AppValidators;
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext widgetcontext) {
     return Scaffold(
       backgroundColor: AppColors.background,
 
@@ -219,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           child: TextButton(
                             onPressed: () {
-                              // Add forgot password later
+                              widgetcontext.push(AppRoutes.forgotPassowrd);
                             },
 
                             child: const Text(
